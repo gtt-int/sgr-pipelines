@@ -16,6 +16,10 @@ inputs:
   id:
     required: true
     type: string
+outputs:
+  image:
+    description: The image that was built.
+    type: string
 
 runs:
   using: "composite"
@@ -81,7 +85,7 @@ runs:
     - name: Set image tag
       id: image
       run: |
-        echo "Docker TASAS ${{ steps.meta.outputs.tags }}"
+        echo "Docker TAG ${{ steps.meta.outputs.tags }}"
         echo "${{ steps.meta.outputs.tags }}" > tags.txt
         export TAG_IMAGE=$(tail -n1 tags.txt)
         echo "::set-output name=image::${TAG_IMAGE}"
