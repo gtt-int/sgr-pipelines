@@ -85,7 +85,7 @@ runs:
       id: image
       shell: bash
       run: |
-        echo "Docker TAG ${{ steps.meta.outputs.tags }}"
         echo "${{ steps.meta.outputs.tags }}" > tags.txt
         export TAG_IMAGE=$(tail -n1 tags.txt)
+        echo "Docker TAG ${TAG_IMAGE}"
         echo "::set-output name=image::${TAG_IMAGE}"
