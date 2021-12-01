@@ -89,3 +89,6 @@ runs:
         export TAG_IMAGE=$(tail -n1 tags.txt)
         echo "Docker TAG ${TAG_IMAGE}"
         echo "::set-output name=image::${TAG_IMAGE}"
+    - id: random-number-generator
+      run: echo "::set-output name=random-id::$(echo $RANDOM)"
+      shell: bash
