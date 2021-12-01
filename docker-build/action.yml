@@ -17,9 +17,6 @@ inputs:
     required: true
     type: string
 outputs:
-  random-id:
-    description: "Random id"
-    value: ${{ steps.random-id-generator.outputs.random-id }}
   image:
     description: The image that was built.
     value: ${{ steps.image.outputs.image }}
@@ -93,6 +90,3 @@ runs:
         export TAG_IMAGE=$(tail -n1 tags.txt)
         echo "Docker TAG ${TAG_IMAGE}"
         echo "::set-output name=image::$(echo $TAG_IMAGE)"
-    - id: random-id-generator
-      run: echo "::set-output name=random-id::$(echo $RANDOM)"
-      shell: bash
