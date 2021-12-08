@@ -33,15 +33,18 @@ runs:
         aws-secret-access-key: ${{ inputs.aws_secret_access_key }}
 
     - name: Get kubeconfig
+      shell: bash
       run: |
         EKS_CLUSTER_NAME=${{ inputs.eks_cluster_name }}
         mkdir -p ~/.kube
         aws eks --region ${{ inputs.aws_region }} update-kubeconfig --name ${EKS_CLUSTER_NAME}
+
     - uses: azure/setup-kubectl@v1
       with:
         version: "v1.21.2"
       id: install
 
     - name: Deploy
+      shell: bash
       run: |
         ${{ inputs.deployment_script }}
