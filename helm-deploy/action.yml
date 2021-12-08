@@ -1,0 +1,47 @@
+name: Deploy application
+description: Deploys an application in EKS
+
+inputs:
+  aws_access_key_id:
+    required: true
+    type: string
+  aws_secret_access_key:
+    required: true
+    type: string
+  aws_region:
+    required: true
+    type: string
+  eks_cluster_name:
+    required: true
+    type: string
+  deployment_script:
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: v3.7.1
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: ${{ inputs.aws_region }}
+        aws-access-key-id: ${{ inputs.aws_access_key_id }}
+        aws-secret-access-key: ${{ inputs.aws_secret_access_key }}
+
+    - name: Get kubeconfig
+      run: |
+        EKS_CLUSTER_NAME=${{ inputs.eks_cluster_name }}
+        mkdir -p ~/.kube
+        aws eks --region ${{ inputs.aws_region }} update-kubeconfig --name ${EKS_CLUSTER_NAME}
+    - uses: azure/setup-kubectl@v1
+      with:
+        version: "v1.21.2"
+      id: install
+
+    - name: Deploy
+      run: |
+        ${{ inputs.deployment_script }}
