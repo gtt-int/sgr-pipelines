@@ -29,7 +29,7 @@ runs:
       uses: docker/setup-buildx-action@v1
     -
       name: Cache Docker layers
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: /tmp/.buildx-cache
         key: ${{ runner.os }}-buildx-${{ github.sha }}-${{inputs.id}}
@@ -37,7 +37,7 @@ runs:
           ${{ runner.os }}-${{inputs.id}}-buildx-
     -
       name: Login to GitHub Container Registry
-      uses: docker/login-action@v1
+      uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
@@ -45,7 +45,7 @@ runs:
     -
       name: Docker meta
       id: meta
-      uses: docker/metadata-action@v3
+      uses: docker/metadata-action@v5
       with:
         # list of Docker images to use as base name for tags
         images: |
@@ -63,7 +63,7 @@ runs:
           type=sha
     -
       name: Build and push
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v5
       with:
         context: ${{ inputs.context }}
         file: ${{ inputs.file }}
@@ -89,4 +89,5 @@ runs:
         echo "${{ steps.meta.outputs.tags }}" > tags.txt
         export TAG_IMAGE=$(tail -n1 tags.txt)
         echo "Docker TAG ${TAG_IMAGE}"
-        echo "::set-output name=image::$(echo $TAG_IMAGE)"
+        echo "image=${TAG_IMAGE}" >> $GITHUB_OUTPUT
+
